@@ -1,4 +1,4 @@
-module gitlab-vv.vkusvill.ru/fullstack/stock-balances/stock-balances-grpc/api
+module github.com/WizzarDD/grpc-test/api
 
 go 1.18
 
