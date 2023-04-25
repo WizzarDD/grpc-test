@@ -29,6 +29,8 @@ message BalancesResponse {
 message Items {
   float ost = 1; // Кол-во остатков
   string date = 2; // Дата на которую пришли остатки
-  string schedule_start = 3; // Расписание товара (время начала работы)
-  string schedule_finish = 4; // Расписание товара (время конца работы)
+  int64 shopID = 3; // Номер магазина
+  int64 productID = 4; // ID товара
+  string schedule_start = 5; // Расписание товара (время начала работы)
+  string schedule_finish = 6; // Расписание товара (время конца работы)
 }
