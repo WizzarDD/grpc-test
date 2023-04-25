@@ -1,6 +1,6 @@
-module github.com/WizzarDD/grpc-test/api
+module gitlab-vv.vkusvill.ru/fullstack/stock-balances/stock-balances-grpc/api
 
-go 1.18
+go 1.19
 
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
