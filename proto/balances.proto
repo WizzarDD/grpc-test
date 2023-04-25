@@ -4,18 +4,31 @@ package balances;
 
 option go_package = "/api";
 
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+// Сервис остатков
+service Balances {
+  // Получение остатков
+  rpc Get (BalancesRequest) returns (BalancesResponse) {}
 }
 
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
+// Запрос остатков
+message BalancesRequest {
+  repeated int64 product_list = 1; // Массив товаров
+  repeated int64 shop_list = 2; // Массив айди магазинов
+  string delivery_date = 3; // Дата доставки
+  string slot_start = 4; // Время начала слота (H:i:s)
+  string slot_finish = 5; // Время конца слота (H:i:s)
+  string slot_during = 6; // Длительность слота (H:i:s)
+  bool is_green = 7; // Возвращать зелёные ценники?
 }
 
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
+// Ответ
+message BalancesResponse {
+  repeated Items items = 1;
+}
+
+message Items {
+  float ost = 1; // Кол-во остатков
+  string date = 2; // Дата на которую пришли остатки
+  string schedule_start = 3; // Расписание товара (время начала работы)
+  string schedule_finish = 4; // Расписание товара (время конца работы)
 }
