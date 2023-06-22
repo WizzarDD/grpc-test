@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type BalancesClient interface {
 	// Получение остатков
 	Get(ctx context.Context, in *BalancesRequest, opts ...grpc.CallOption) (*BalancesResponse, error)
+	GetNoZero(ctx context.Context, in *NoZeroBalancesRequest, opts ...grpc.CallOption) (*NoZeroBalancesResponse, error)
 }
 
 type balancesClient struct {
@@ -43,12 +44,22 @@ func (c *balancesClient) Get(ctx context.Context, in *BalancesRequest, opts ...g
 	return out, nil
 }
 
+func (c *balancesClient) GetNoZero(ctx context.Context, in *NoZeroBalancesRequest, opts ...grpc.CallOption) (*NoZeroBalancesResponse, error) {
+	out := new(NoZeroBalancesResponse)
+	err := c.cc.Invoke(ctx, "/balances.Balances/GetNoZero", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BalancesServer is the server API for Balances service.
 // All implementations must embed UnimplementedBalancesServer
 // for forward compatibility
 type BalancesServer interface {
 	// Получение остатков
 	Get(context.Context, *BalancesRequest) (*BalancesResponse, error)
+	GetNoZero(context.Context, *NoZeroBalancesRequest) (*NoZeroBalancesResponse, error)
 	mustEmbedUnimplementedBalancesServer()
 }
 
@@ -58,6 +69,9 @@ type UnimplementedBalancesServer struct {
 
 func (UnimplementedBalancesServer) Get(context.Context, *BalancesRequest) (*BalancesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedBalancesServer) GetNoZero(context.Context, *NoZeroBalancesRequest) (*NoZeroBalancesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetNoZero not implemented")
 }
 func (UnimplementedBalancesServer) mustEmbedUnimplementedBalancesServer() {}
 
@@ -90,6 +104,24 @@ func _Balances_Get_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Balances_GetNoZero_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NoZeroBalancesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BalancesServer).GetNoZero(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/balances.Balances/GetNoZero",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BalancesServer).GetNoZero(ctx, req.(*NoZeroBalancesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Balances_ServiceDesc is the grpc.ServiceDesc for Balances service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +132,10 @@ var Balances_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _Balances_Get_Handler,
+		},
+		{
+			MethodName: "GetNoZero",
+			Handler:    _Balances_GetNoZero_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

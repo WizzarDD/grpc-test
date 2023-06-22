@@ -8,6 +8,7 @@ option go_package = "/api";
 service Balances {
   // Получение остатков
   rpc Get (BalancesRequest) returns (BalancesResponse) {}
+  rpc GetNoZero (NoZeroBalancesRequest) returns (NoZeroBalancesResponse) {}
 }
 
 // Запрос остатков
@@ -21,9 +22,26 @@ message BalancesRequest {
   bool is_green = 7; // Возвращать зелёные ценники?
 }
 
+// Запрос ненулевых остатков
+message NoZeroBalancesRequest {
+  repeated int64 shop_list = 1; // Массив айди магазинов
+}
+
 // Ответ
 message BalancesResponse {
   repeated Items items = 1;
+}
+
+// Ответ
+message NoZeroBalancesResponse {
+  repeated NoZeroShops shops = 1;
+}
+
+message NoZeroShops {
+  int64 shop_id = 1; // Номер магазина
+  repeated int64 today_product_ids = 2; // Массив товаров, имеющих ненулевой остаток на сегодня
+  repeated int64 tomorrow_product_ids = 3; // Массив товаров, имеющих ненулевой остаток на завтра
+
 }
 
 message Items {
